@@ -1,0 +1,41 @@
+<div *ngIf="lecciones" class="course-lections-container">
+
+  <h2 class="lections-title" >Lecciones</h2>
+
+  <div class="lections-info">
+    <p><strong>Nombre:</strong> {{ lecciones.titulo }}</p>
+    <p><strong>Orden:</strong> {{ lecciones.orden }}</p>
+    <p><strong>Duración estimada:</strong> {{ lecciones.duracionEstimada }} </p>
+    <p><strong>Contenido:</strong> {{ lecciones.contenido }}</p>
+  </div>
+
+  <div class="button-container">
+    <button class="edit-lection-btn">Editar</button>
+    <button class="delete-lection-btn">Eliminar</button>
+  </div>
+
+  <div *ngIf="temasDto" class="lessons-container">
+    <h3>Temas</h3>
+    <button class="add-lesson-btn" >Agregar Tema</button>
+    <ul class="lessons-list">
+      <li>
+        <p class="lesson-title">Título</p>
+        <p class="lesson-duration">Orden</p>
+        <p class="lesson-content">Descripción</p>
+        <p class="lesson-actions">Estado</p>
+        <p class="lesson-actions">Recurso Multimedia</p>
+        <p class="lesson-actions">Editar</p>
+        <p class="lesson-actions">Eliminar</p>
+      </li>
+      <li *ngFor="let tema of temasDto" class="lesson-item">
+        <p>{{ tema.titulo }}</p>
+        <p>{{ tema.orden }}</p>
+        <p>{{ tema.descripcion }}</p>
+        <p>{{ tema.estado }}</p>
+        <p>{{ tema.recursoMultimedia}}</p>
+        <button class="edit-lesson-btn" >Editar</button>
+        <button class="delete-lesson-btn" >Eliminar</button>
+      </li>
+    </ul>
+  </div>
+</div>

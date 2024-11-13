@@ -2,8 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CursoService } from '../../services/course.service';
 import { CursoDto } from '../../models/CursoDto';
+import { LeccionDto } from '../../models/LeccionDto';
 import { InscripcionService } from '../../services/inscripcion.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import {LeccionService} from '../../services/leccion.service';
+import {PaginadoDto} from "../../models/PaginadoDto";
 
 @Component({
   selector: 'app-course-details',
@@ -14,13 +17,23 @@ export class CourseDetailsComponent implements OnInit {
   course: CursoDto | null = null;
   isEnrolled: boolean = false;
   userId: number | null = null;
+  // lista de leccion dto
+  lecciones: LeccionDto[] = [];
+  // paginado dto
+  paginadoDto: PaginadoDto = {
+    page: 1,
+    size: 10,
+    sortBy: 'idLeccion',
+    sortDir: 'asc'
+  };
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private cursoService: CursoService,
     private inscripcionService: InscripcionService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private leccionService: LeccionService
   ) {}
 
   ngOnInit(): void {
@@ -46,6 +59,7 @@ export class CourseDetailsComponent implements OnInit {
     if (courseId) {
       // Cargar los detalles del curso usando el servicio
       this.loadCourseDetails(courseId);
+      this.loadLeccionesByCursoId(courseId, this.paginadoDto);
     }
   }
 
@@ -60,6 +74,20 @@ export class CourseDetailsComponent implements OnInit {
         console.error('Error al cargar los detalles del curso:', error);
       }
     });
+  }
+
+  loadLeccionesByCursoId(cursoId: number, paginadoDto: PaginadoDto): void {
+
+    this.leccionService.getLeccionesByCurso(cursoId).subscribe({
+      next: (data) => {
+        this.lecciones = data.content;
+        console.log('Lecciones del curso cargadas:', this.lecciones);
+      },
+      error: (error) => {
+        console.error('Error al cargar las lecciones del curso:', error);
+      }
+    });
+
   }
 
   // Lógica para inscribirse en el curso
@@ -98,6 +126,14 @@ export class CourseDetailsComponent implements OnInit {
         panelClass: ['error-snackbar'],
       });
     }
+  }
+
+  viewSubject(id: number): void {
+    this.router.navigate(['/course-lections/', id]);
+  }
+
+  addLesson(): void {
+    this.router.navigate(['/course-lections/', this.route.snapshot.paramMap.get('id')]);
   }
 
   // Lógica para volver a la lista de cursos

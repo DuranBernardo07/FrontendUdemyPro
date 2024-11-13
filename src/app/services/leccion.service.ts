@@ -9,7 +9,7 @@ import { PaginadoDto } from '../models/PaginadoDto';
   providedIn: 'root'
 })
 export class LeccionService {
-  private apiUrl = `${environment.API_URL}/leccion`;
+  private apiUrl = `http://localhost:8080/api/leccion`;
 
   constructor(private http: HttpClient) {}
 
@@ -24,8 +24,8 @@ export class LeccionService {
   }
 
   // Obtener lecciones por curso (paginado)
-  getLeccionesByCurso(cursoId: number, paginadoDto: PaginadoDto): Observable<any> {
-    return this.http.post(`${this.apiUrl}/curso/${cursoId}`, paginadoDto);
+  getLeccionesByCurso(cursoId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/curso/${cursoId}`);
   }
 
   // Crear nueva lección
@@ -37,6 +37,7 @@ export class LeccionService {
   updateLeccion(leccionDto: LeccionDto): Observable<any> {
     return this.http.put(`${this.apiUrl}/update`, leccionDto);
   }
+
 
   // Eliminar lección
   deleteLeccion(idLeccion: number): Observable<any> {

@@ -1,0 +1,57 @@
+<div class="subject-form">
+  <h2 class="form-title">Formulario de Tema</h2>
+
+  <form [formGroup]="subjectForm" (ngSubmit)="createSubject()">
+    <!-- Campo de titulo de la Asignatura -->
+    <div class="form-group input-group">
+      <label for="titulo">Título</label>
+      <div class="input-wrapper">
+        <input id="titulo" type="text" formControlName="titulo" placeholder="Título del tema" />
+      </div>
+      <!-- Mensaje de error para el campo de título -->
+      <span *ngIf="subjectForm.get('titulo')?.touched && subjectForm.get('titulo')?.invalid" class="error-message">
+        Error en el título
+      </span>
+    </div>
+
+    <!-- Campo de Orden del Tema -->
+    <div class="form-group input-group">
+      <label for="orden">Orden</label>
+      <div class="input-wrapper">
+        <input id="orden" type="number" formControlName="orden" placeholder="Orden del tema" />
+      </div>
+      <!-- Mensaje de error para el campo de orden -->
+      <span *ngIf="subjectForm.get('orden')?.touched && subjectForm.get('orden')?.invalid" class="error-message">
+        Error en el orden
+      </span>
+    </div>
+
+    <!-- Campo de descripcion del Tema -->
+    <div class="form-group input-group">
+      <label for="descripcion">Descripción</label>
+      <div class="input-wrapper">
+        <textarea id="descripcion" formControlName="descripcion" rows="4" placeholder="Descripción del tema"></textarea>
+      </div>
+      <!-- Mensaje de error para el campo de descripción -->
+      <span *ngIf="subjectForm.get('descripcion')?.touched && subjectForm.get('descripcion')?.invalid" class="error-message">
+        Error en la descripción
+      </span>
+    </div>
+
+    <!-- Campo de recurso multimedia del Tema -->
+    <div class="form-group input-group">
+      <label for="recursoMultimedia">Recurso multimedia</label>
+      <div class="input-wrapper">
+        <input id="recursoMultimedia" type="file" (change)="onFileSelected($event)" />
+      </div>
+      <!-- Mensaje de error para el campo de portada -->
+      <span *ngIf="fileError" class="error-message">
+          {{ fileError }}
+        </span>
+    </div>
+
+
+    <!-- Botón para enviar el formulario -->
+    <button type="submit" class="btn btn-primary">Crear Tema</button>
+  </form>
+</div>

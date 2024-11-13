@@ -24,8 +24,31 @@
   </div>
 </div>
 
-<!-- Mostrar mensaje si no se encontró el curso -->
-<div *ngIf="!course" class="no-course-message">
-  <p>Curso no encontrado.</p>
-  <button class="back-btn" (click)="goBack()">Volver a la lista de cursos</button>
+<div *ngIf="lecciones" class="lessons-container">
+  <h3>Lecciones</h3>
+  <button class="add-lesson-btn" (click)="addLesson()">Agregar Lección</button>
+  <ul class="lessons-list">
+    <li>
+      <p class="lesson-title">Título</p>
+      <p class="lesson-duration">Duración</p>
+      <p class="lesson-content">Contenido</p>
+      <p class="lesson-actions">Ver temas</p>
+      <p class="lesson-actions">Editar</p>
+      <p class="lesson-actions">Eliminar</p>
+    </li>
+    <li *ngFor="let leccion of lecciones" class="lesson-item">
+      <p>{{ leccion.titulo }}</p>
+      <p>{{ leccion.duracionEstimada }}</p>
+      <p>{{ leccion.contenido }}</p>
+      <button class="view-lesson-btn" (click)="viewSubject(leccion.idLeccion)">Ingresar</button>
+      <button class="edit-lesson-btn" >Editar</button>
+      <button class="delete-lesson-btn" >Eliminar</button>
+    </li>
+  </ul>
+
+  <!-- Mostrar mensaje si no se encontró el curso -->
+  <div *ngIf="!course" class="no-course-message">
+    <p>Curso no encontrado.</p>
+    <button class="back-btn" (click)="goBack()">Volver a la lista de cursos</button>
+  </div>
 </div>
