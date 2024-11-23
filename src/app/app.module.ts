@@ -26,6 +26,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { CourseDetailsTutorComponent } from './components/course-details-tutor/course-details-tutor.component';
 import { CourseEditTutorComponent } from './components/course-edit-tutor/course-edit-tutor.component';
+import { CourseLectionsComponent } from './components/course-lections/course-lections.component';
+import { LectionFormComponent } from './components/lection-form/lection-form.component';
+import { LectionsSubjectComponent } from './components/lections-subject/lections-subject.component';
+import { SubjectFormComponent } from './components/subject-form/subject-form.component';
+import { EditSubjectComponent } from './components/edit-subject/edit-subject.component';
+import { EditLectionComponent } from './components/edit-lection/edit-lection.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +52,12 @@ import { CourseEditTutorComponent } from './components/course-edit-tutor/course-
     SuccessDialogComponent,
     CourseDetailsTutorComponent,
     CourseEditTutorComponent,
+    CourseLectionsComponent,
+    LectionFormComponent,
+    LectionsSubjectComponent,
+    SubjectFormComponent,
+    EditSubjectComponent,
+    EditLectionComponent,
   ],
   imports: [
     BrowserModule,

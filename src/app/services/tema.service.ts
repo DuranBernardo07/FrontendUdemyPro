@@ -9,7 +9,7 @@ import { environment } from '../../environments/environment';
 })
 export class TemaService {
 
-  private baseUrl: string = `${environment.API_URL}/api/tema`;
+  private baseUrl: string = `${environment.API_URL}/tema`;
 
   constructor(private http: HttpClient) {}
 
@@ -19,13 +19,13 @@ export class TemaService {
   }
 
   // Obtener tema por ID
-  getTemaById(id: number): Observable<TemaDto> {
+  getTemaById(id: number): Observable<any> {
     return this.http.get<TemaDto>(`${this.baseUrl}/${id}`);
   }
 
   // Obtener temas por curso
   getTemasByCurso(cursoId: number, paginadoDto: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/curso/${cursoId}`, paginadoDto);
+    return this.http.get(`${this.baseUrl}/curso/${cursoId}`);
   }
 
   // Crear un nuevo tema

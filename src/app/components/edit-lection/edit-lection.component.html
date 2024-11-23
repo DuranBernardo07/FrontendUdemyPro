@@ -1,0 +1,58 @@
+<div class="lection-form">
+  <h2 class="form-title">Formulario de Lección</h2>
+
+  <form [formGroup]="leccionForm" (ngSubmit)="createLeccion()">
+    <!-- Campo de Título de la Lección -->
+    <div class="form-group input-group">
+      <label for="titulo">Título</label>
+      <div class="input-wrapper">
+        <input id="titulo" type="text" formControlName="titulo" placeholder="Título de la lección" />
+      </div>
+      <!-- Mensaje de error para el campo de título -->
+      <span *ngIf="leccionForm.get('titulo')?.touched && leccionForm.get('titulo')?.invalid" class="error-message">
+        Error en el título
+      </span>
+    </div>
+
+    <!-- Campo de orden de la Lección -->
+    <div class="form-group input-group">
+      <label for="orden">Orden</label>
+      <div class="input-wrapper">
+        <input id="orden" type="number" formControlName="orden" placeholder="Orden de la lección" />
+      </div>
+      <!-- Mensaje de error para el campo de orden -->
+      <span *ngIf="leccionForm.get('orden')?.touched && leccionForm.get('orden')?.invalid" class="error-message">
+        Error en el orden
+      </span>
+    </div>
+
+    <!-- Campo de duracion estimada de la Lección -->
+    <div class="form-group input-group">
+      <label for="duracionEstimada">Duración Estimada</label>
+      <div class="input-wrapper">
+        <input id="duracionEstimada" type="number" formControlName="duracionEstimada" placeholder="Duración estimada de la lección" />
+      </div>
+      <!-- Mensaje de error para el campo de duracion estimada -->
+      <span *ngIf="leccionForm.get('duracionEstimada')?.touched && leccionForm.get('duracionEstimada')?.invalid" class="error-message">
+        Error en la duración estimada
+      </span>
+    </div>
+
+    <!-- Campo de Contenido de la Lección -->
+    <div class="form-group input-group">
+      <label for="contenido">Contenido</label>
+      <div class="input-wrapper">
+        <textarea id="contenido" formControlName="contenido" rows="4" placeholder="Contenido de la lección"></textarea>
+      </div>
+      <!-- Mensaje de error para el campo de contenido -->
+      <span *ngIf="leccionForm.get('contenido')?.touched && leccionForm.get('contenido')?.invalid" class="error-message">
+        Error en el contenido
+      </span>
+    </div>
+
+    <!-- Botón para enviar el formulario -->
+    <button type="submit" class="btn btn-primary">Actualizar Lección</button>
+  </form>
+</div>
+
+
