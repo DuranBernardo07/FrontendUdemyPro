@@ -1,0 +1,58 @@
+<div *ngIf="lecciones" class="course-lections-container">
+
+  <h2 class="lections-title" >Lecciones</h2>
+
+  <div class="lections-info">
+    <p><strong>Nombre:</strong> {{ lecciones.titulo }}</p>
+    <p><strong>Orden:</strong> {{ lecciones.orden }}</p>
+    <p><strong>Duración estimada:</strong> {{ lecciones.duracionEstimada }} </p>
+    <p><strong>Contenido:</strong> {{ lecciones.contenido }}</p>
+  </div>
+</div>
+<br><br>
+<div *ngIf="temasDto" class="course-lections-container">
+  <div class="container-fluid">
+    <div class="row mb-3">
+      <div class="col-12 d-flex justify-content-between align-items-center">
+        <h3>Temas</h3>
+        <button class="enroll-btn" (click)="navigateToLectionForm()">
+          Agregar Tema
+        </button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <table class="table table-striped table-hover table-bordered">
+          <thead class="table-dark">
+          <tr>
+            <th>Título</th>
+            <th>Orden</th>
+            <th>Descripción</th>
+            <th>Recurso Multimedia</th>
+            <th>Acciones</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let tema of temasDto">
+            <td>{{ tema.titulo }}</td>
+            <td>{{ tema.orden }}</td>
+            <td>{{ tema.descripcion }}</td>
+            <center> <a class="btn btn-success" href="{{tema.recursoMultimedia}}">Descargar</a></center>
+            <td>
+              <div class="btn-group" role="group">
+                <button class="btn btn-warning btn-sm" (click)="editTema(tema.idTema)">
+                  <i class="bi bi-pencil"></i> Editar
+                </button>
+                <button class="btn btn-danger btn-sm" (click)="deleteTema(tema.idTema)">
+                  <i class="bi bi-trash"></i> Eliminar
+                </button>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

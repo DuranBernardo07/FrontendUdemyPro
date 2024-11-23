@@ -14,7 +14,11 @@ import { CourseDetailsComponent } from './components/course-details/course-detai
 import { MyCoursesStudentComponent } from './components/my-courses-student/my-courses-student.component';
 import { CourseDetailsTutorComponent } from './components/course-details-tutor/course-details-tutor.component';
 import { CourseEditTutorComponent } from './components/course-edit-tutor/course-edit-tutor.component';
-
+import { CourseLectionsComponent } from './components/course-lections/course-lections.component';
+import { LectionFormComponent } from './components/lection-form/lection-form.component';
+import {SubjectFormComponent} from "./components/subject-form/subject-form.component";
+import {EditSubjectComponent} from "./components/edit-subject/edit-subject.component";
+import {EditLectionComponent} from "./components/edit-lection/edit-lection.component";
 
 
 const routes: Routes = [
@@ -32,6 +36,11 @@ const routes: Routes = [
   { path: 'my-courses-student', component: MyCoursesStudentComponent },
   { path: 'course-details-tutor', component: CourseDetailsTutorComponent },
   { path: 'course-edit-tutor', component: CourseEditTutorComponent },
+  {path: 'course-lections/:id', component: CourseLectionsComponent},
+  {path: 'create-lection/:id', component: LectionFormComponent},
+  {path: 'create-subject/:id', component: SubjectFormComponent},
+  {path: 'update-subject/:id', component: EditSubjectComponent},
+  {path: 'update-lection/:id', component: EditLectionComponent}
 ];
 
 @NgModule({
