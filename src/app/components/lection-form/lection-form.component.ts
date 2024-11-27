@@ -57,18 +57,33 @@ export class LectionFormComponent implements OnInit {
         duracionEstimada: this.leccionForm.get('duracionEstimada')?.value,
         contenido: this.leccionForm.get('contenido')?.value,
         cursoId: this.leccionForm.get('cursoId')?.value,
-      }
+      };
+
+      // Mostrar mensaje de éxito antes de enviar al servidor
+      this.snackBar.open('Lección creada con éxito.', 'Cerrar', {
+        duration: 3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
+        panelClass: ['success-snackbar'],
+      });
+
+      // Llamada al servicio
       this.leccionService.createLeccion(this.leccion).subscribe(
         (response) => {
-          this.snackBar.open('Lección creada con éxito.', 'Cerrar', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-            panelClass: ['success-snackbar'],
-          });
-        });
-      this.router.navigate(['/course-details', this.courseId]);
+          console.log('Lección creada:', response);
+
+          // Redirigir a la lista de lecciones
+          this.router.navigate(['/course-details', this.courseId]); // Asegúrate de que esta ruta sea la correcta
+        },
+        (error) => {
+          console.error('Error al crear la lección:', error);
+
+          // Redirigir a la lista de lecciones incluso si ocurre un error
+          this.router.navigate(['/course-details', this.courseId]);
+        }
+      );
     } else {
+      // Validación fallida del formulario
       this.snackBar.open('Por favor, complete el formulario correctamente.', 'Cerrar', {
         duration: 3000,
         horizontalPosition: 'center',
@@ -77,6 +92,10 @@ export class LectionFormComponent implements OnInit {
       });
     }
   }
+
+
+
+
 
   // Evento cuando se selecciona un archivo
   onFileSelected(event: Event): void {
