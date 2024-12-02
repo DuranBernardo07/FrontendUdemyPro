@@ -20,6 +20,7 @@ export class RegistrarUsuarioComponent {
   telefono: string = '';
   ci: string = '';
   errorMessage: string = '';
+  successMessage: string = ''; // Nueva variable para el mensaje de éxito
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -40,6 +41,10 @@ export class RegistrarUsuarioComponent {
   }
 
   onRegister() {
+    // Limpiar mensajes previos
+    this.errorMessage = '';
+    this.successMessage = '';
+
     // Validación de campos vacíos
     if (!this.username || !this.password || !this.confirmPassword || !this.gmail || !this.nombre || !this.primerApellido || !this.telefono || !this.ci) {
       this.errorMessage = 'Por favor, completa todos los campos.';
@@ -84,7 +89,9 @@ export class RegistrarUsuarioComponent {
     this.authService.registerUser(usuarioDto, personaDto).subscribe({
       next: (response) => {
         console.log('Registro exitoso:', response);
-        this.router.navigate(['/login']);
+        this.successMessage = 'Usuario registrado con éxito.';
+        // Opcional: Redirigir después de 3 segundos
+        setTimeout(() => this.router.navigate(['/login']), 3000);
       },
       error: (err) => {
         console.error('Error en el registro:', err);

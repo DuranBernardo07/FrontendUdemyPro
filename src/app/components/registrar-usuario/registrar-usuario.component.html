@@ -16,6 +16,16 @@
       </button>
     </div>
 
+    <!-- Mensaje de confirmación -->
+    <div *ngIf="successMessage" class="confirmation-footer">
+      {{ successMessage }}
+    </div>
+
+    <!-- Mensaje de error -->
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+
     <div class="form-container">
       <form class="login-form" (ngSubmit)="onRegister()">
         <h2>Información de Usuario</h2>

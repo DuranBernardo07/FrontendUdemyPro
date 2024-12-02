@@ -8,6 +8,21 @@ html, body {
   background-color: var(--text-light); /* Fondo general */
 }
 
+.confirmation-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #28a745; /* Verde de éxito */
+  color: white;
+  text-align: center;
+  font-size: 1.2em;
+  padding: 10px 0;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+
 .container {
   display: flex;
   justify-content: center;
