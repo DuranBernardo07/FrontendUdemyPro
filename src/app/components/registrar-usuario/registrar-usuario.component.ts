@@ -23,25 +23,44 @@ export class RegistrarUsuarioComponent {
 
   constructor(private authService: AuthService, private router: Router) {}
 
-
   selectOption(option: string) {
     this.isTutorSelected = option === 'tutor';
   }
 
-  onRegister() {
+  validateNumericInput(event: KeyboardEvent): void {
+    const char = String.fromCharCode(event.keyCode);
+    if (!/^\d+$/.test(char)) {
+      event.preventDefault();
+    }
+  }
 
+  isValidEmail(email: string): boolean {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
+  onRegister() {
+    // Validación de campos vacíos
     if (!this.username || !this.password || !this.confirmPassword || !this.gmail || !this.nombre || !this.primerApellido || !this.telefono || !this.ci) {
       this.errorMessage = 'Por favor, completa todos los campos.';
       return;
     }
 
-    if (!this.isValidEmail(this.gmail)) {
-      this.errorMessage = 'El formato del correo no es válido.';
+    // Validación de longitud mínima de contraseña
+    if (this.password.length < 8) {
+      this.errorMessage = 'La contraseña debe tener al menos 8 caracteres.';
       return;
     }
 
+    // Validación de coincidencia de contraseñas
     if (this.password !== this.confirmPassword) {
       this.errorMessage = 'Las contraseñas no coinciden. Por favor, intenta de nuevo.';
+      return;
+    }
+
+    // Validación de formato de correo electrónico
+    if (!this.isValidEmail(this.gmail)) {
+      this.errorMessage = 'El formato del correo no es válido.';
       return;
     }
 
@@ -61,6 +80,7 @@ export class RegistrarUsuarioComponent {
       ci: this.ci
     };
 
+    // Llamada al servicio de registro
     this.authService.registerUser(usuarioDto, personaDto).subscribe({
       next: (response) => {
         console.log('Registro exitoso:', response);
@@ -73,20 +93,7 @@ export class RegistrarUsuarioComponent {
     });
   }
 
-  isValidEmail(email: string): boolean {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  }
-
   redirectToLogin() {
     this.router.navigate(['/login']);
   }
-
-  validateNumericInput(event: KeyboardEvent): void {
-    const char = String.fromCharCode(event.keyCode);
-    if (!/^\d+$/.test(char)) {
-      event.preventDefault();
-    }
-  }
-
 }
