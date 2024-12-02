@@ -90,23 +90,42 @@
           </div>
         </div>
 
-        <div class="form-row">
-          <div class="form-group form-half">
-            <label for="telefono">Teléfono</label>
-            <div class="input-container">
-              <span class="icon">📞</span>
-              <input type="text" id="telefono" [(ngModel)]="telefono" name="telefono" placeholder="Introduce tu número de teléfono" class="form-control" required />
-            </div>
-          </div>
-
-          <div class="form-group form-half">
-            <label for="ci">Cédula de Identidad</label>
-            <div class="input-container">
-              <span class="icon">🆔</span>
-              <input type="text" id="ci" [(ngModel)]="ci" name="ci" placeholder="Introduce tu CI" class="form-control" required />
-            </div>
+        <div class="form-group form-half">
+          <label for="telefono">Teléfono</label>
+          <div class="input-container">
+            <span class="icon">📞</span>
+            <input
+              type="text"
+              id="telefono"
+              [(ngModel)]="telefono"
+              name="telefono"
+              placeholder="Introduce tu número de teléfono"
+              class="form-control"
+              required
+              inputmode="numeric"
+              pattern="[0-9]*"
+              (keypress)="validateNumericInput($event)" />
           </div>
         </div>
+
+        <div class="form-group form-half">
+          <label for="ci">Cédula de Identidad</label>
+          <div class="input-container">
+            <span class="icon">🆔</span>
+            <input
+              type="text"
+              id="ci"
+              [(ngModel)]="ci"
+              name="ci"
+              placeholder="Introduce tu CI"
+              class="form-control"
+              required
+              inputmode="numeric"
+              pattern="[0-9]*"
+              (keypress)="validateNumericInput($event)" />
+          </div>
+        </div>
+
 
         <button type="submit" class="login-btn">Registrarse <span class="icon">✔️</span></button>
       </form>
