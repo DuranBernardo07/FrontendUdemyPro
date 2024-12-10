@@ -23,6 +23,11 @@
           <input id="nombre" type="text" formControlName="nombre" placeholder="Título del curso">
         </div>
         <!-- Mensaje de error para el campo de título -->
+        <!-- Mensaje de error para el campo de título -->
+        <span *ngIf="courseForm.get('nombre')?.hasError('invalidTitle')" class="error-message">
+         El título solo puede contener letras, números, espacios, puntos, comas y guiones.
+        </span>
+
         <span *ngIf="courseForm.get('nombre')?.touched && courseForm.get('nombre')?.invalid" class="error-message">
           {{ getErrorMessage('nombre') }}
         </span>
@@ -100,9 +105,14 @@
 
     <!-- Nuevo botón de enviar debajo del formulario -->
     <div class="form-group submit-group">
-      <button type="submit" class="submit-btn">
-        Enviar Curso
+      <button
+        type="submit"
+        class="submit-btn"
+        [disabled]="!courseForm.valid || isSubmitting"
+      >
+        {{ isSubmitting ? 'Enviando...' : 'Crear Curso' }}
       </button>
     </div>
+
   </form>
 </div>

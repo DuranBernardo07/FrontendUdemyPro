@@ -95,7 +95,7 @@ export class RegistrarUsuarioComponent {
       },
       error: (err) => {
         console.error('Error en el registro:', err);
-        this.errorMessage = 'Error al registrar. Por favor, inténtalo nuevamente.';
+        this.errorMessage = 'Error al registrar. Por favor, ingrese otro nombre de usuario.';
       }
     });
   }

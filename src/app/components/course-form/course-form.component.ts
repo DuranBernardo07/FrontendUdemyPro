@@ -19,6 +19,7 @@ export class CourseFormComponent implements OnInit {
   previewUrl: string | ArrayBuffer | null = null; // URL de vista previa de la imagen
   categorias: Categoria[] = []; // Almacenar las categorías obtenidas de la API
   userId: number | null = null; // Almacenar el ID del usuario logueado
+  isSubmitting = false; // Controlar el estado del botón de envío
 
   constructor(
     private fb: FormBuilder,
@@ -29,7 +30,6 @@ export class CourseFormComponent implements OnInit {
     private authService: AuthService
   ) {}
 
-  // src/app/components/course-form/course-form.component.ts
   ngOnInit(): void {
     // Inicializar el formulario con validaciones
     this.courseForm = this.fb.group({
@@ -66,8 +66,6 @@ export class CourseFormComponent implements OnInit {
     console.log('Categoría seleccionada - ID:', selectedCategoryId);
   }
 
-
-  // Cargar las categorías desde el servicio
   loadCategorias(): void {
     this.categoriaService.getAllCategorias().subscribe({
       next: (data) => {
@@ -80,8 +78,7 @@ export class CourseFormComponent implements OnInit {
     });
   }
 
-  // Evento cuando se selecciona un archivo
-  onFileSelected(event: any) {
+  onFileSelected(event: any): void {
     const file: File = event.target.files[0];
     console.log('Archivo seleccionado:', file);
 
@@ -91,7 +88,6 @@ export class CourseFormComponent implements OnInit {
         this.selectedFile = file;
         this.fileError = null;
 
-        // Mostrar vista previa de la imagen seleccionada
         const reader = new FileReader();
         reader.onload = () => {
           this.previewUrl = reader.result;
@@ -107,84 +103,52 @@ export class CourseFormComponent implements OnInit {
     }
   }
 
-  // Método para enviar el formulario
-  onSubmit() {
-    console.log('Botón de enviar presionado.');
-
-    if (this.courseForm.valid && this.selectedFile && this.userId !== null) {
-      // Validación adicional para verificar categoría
-      if (!this.courseForm.value.Categoria_id_categoria) {
-        console.error('No se ha seleccionado una categoría válida');
-        this.snackBar.open('Por favor, selecciona una categoría válida.', 'Cerrar', {
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-          panelClass: ['error-snackbar'],
-        });
-        return;
-      }
-
-      // Convertir el valor de Categoria_id_categoria a número antes de enviar el FormData
-      const categoriaId = Number(this.courseForm.value.Categoria_id_categoria);
-
-      // Construir el FormData con los datos del curso
-      const formData = new FormData();
-      formData.append('nombre', this.courseForm.value.nombre);
-      formData.append('descripcion', this.courseForm.value.descripcion);
-      formData.append('dificultad', this.courseForm.value.dificultad);
-      formData.append('estado', this.courseForm.value.estado.toString());
-      formData.append('categoriaId', categoriaId.toString()); // Asegúrate de que se esté enviando como string de un número válido
-      formData.append('usuarioCreadorId', this.userId.toString());
-
-      if (this.selectedFile) {
-        formData.append('portada', this.selectedFile, this.selectedFile.name);
-      }
-
-      // Mostrar los valores de FormData para depurar
-      formData.forEach((value, key) => {
-        console.log(`FormData - ${key}:`, value);
+  onSubmit(): void {
+    if (!this.courseForm.valid || !this.selectedFile || this.userId === null) {
+      console.error('Formulario inválido o falta información.');
+      this.snackBar.open('Por favor, completa todos los campos.', 'Cerrar', {
+        duration: 3000,
       });
-
-      // Llamar al servicio para crear el curso
-      this.cursoService.createCurso(formData).subscribe({
-        next: (response) => {
-          console.log('Respuesta del servicio:', response);
-          this.snackBar.open('¡El curso se ha creado exitosamente!', 'Cerrar', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-            panelClass: ['success-snackbar'],
-          });
-          setTimeout(() => {
-            this.router.navigate(['/my-courses']); // Redirigir a la lista de cursos
-          }, 3000);
-        },
-        error: (error) => {
-          console.error('Error al crear el curso:', error);
-          this.snackBar.open('Error al crear el curso. Por favor, revisa los campos.', 'Cerrar', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-            panelClass: ['error-snackbar'],
-          });
-        },
-      });
-    } else {
-      console.error('Formulario no válido o falta información.');
-      console.log('Datos actuales del formulario:', this.courseForm.value);
-      console.log('ID del usuario actual:', this.userId);
-      console.log('Archivo seleccionado:', this.selectedFile);
+      return;
     }
+
+    this.isSubmitting = true; // Desactiva el botón
+
+    const formData = new FormData();
+    formData.append('nombre', this.courseForm.value.nombre);
+    formData.append('descripcion', this.courseForm.value.descripcion);
+    formData.append('dificultad', this.courseForm.value.dificultad);
+    formData.append('estado', this.courseForm.value.estado.toString());
+    formData.append('categoriaId', this.courseForm.value.Categoria_id_categoria.toString());
+    formData.append('usuarioCreadorId', this.userId.toString());
+
+    if (this.selectedFile) {
+      formData.append('portada', this.selectedFile, this.selectedFile.name);
+    }
+
+    this.cursoService.createCurso(formData).subscribe({
+      next: (response) => {
+        console.log('Curso creado:', response);
+        this.snackBar.open('¡Curso creado exitosamente!', 'Cerrar', {
+          duration: 3000,
+        });
+        this.isSubmitting = false; // Reactiva el botón después del éxito
+        this.router.navigate(['/my-courses']);
+      },
+      error: (error) => {
+        console.error('Error al crear curso:', error);
+        this.snackBar.open('Error al crear el curso. Inténtalo de nuevo.', 'Cerrar', {
+          duration: 3000,
+        });
+        this.isSubmitting = false; // Reactiva el botón en caso de error
+      },
+    });
   }
 
-
-
-  // Método para cancelar la creación del curso y redirigir
-  onCancel() {
+  onCancel(): void {
     this.router.navigate(['/my-courses']);
   }
 
-  // Obtener mensaje de error para un campo específico
   getErrorMessage(field: string): string {
     if (this.courseForm.get(field)?.hasError('required')) {
       return 'Este campo es obligatorio.';
