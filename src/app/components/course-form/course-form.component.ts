@@ -42,7 +42,7 @@ export class CourseFormComponent implements OnInit {
 
     this.loadCategorias();
 
-    // Obtener el ID del usuario logueado directamente desde localStorage usando la misma clave
+    // Obtener el ID del usuario logueado directamente desde localStorage
     const storedUserId = localStorage.getItem('idUsuario');
     if (storedUserId) {
       this.userId = Number(storedUserId);
@@ -106,7 +106,7 @@ export class CourseFormComponent implements OnInit {
   onSubmit(): void {
     if (!this.courseForm.valid || !this.selectedFile || this.userId === null) {
       console.error('Formulario inválido o falta información.');
-      this.snackBar.open('Por favor, completa todos los campos.', 'Cerrar', {
+      this.snackBar.open('Por favor, completa todos los campos y selecciona una imagen de portada.', 'Cerrar', {
         duration: 3000,
       });
       return;

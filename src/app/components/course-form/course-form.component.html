@@ -51,11 +51,12 @@
         <div class="input-wrapper">
           <input id="portada" type="file" (change)="onFileSelected($event)" accept=".jpg, .jpeg, .png" />
         </div>
-        <!-- Mensaje de error para el campo de portada -->
-        <span *ngIf="fileError" class="error-message">
-          {{ fileError }}
+        <span *ngIf="!selectedFile" class="error-message">
+        Por favor, selecciona una imagen de portada.
         </span>
       </div>
+
+
 
       <!-- Mostrar la imagen de vista previa si existe -->
       <div *ngIf="previewUrl" class="image-preview">
@@ -108,11 +109,12 @@
       <button
         type="submit"
         class="submit-btn"
-        [disabled]="!courseForm.valid || isSubmitting"
+        [disabled]="!courseForm.valid || !selectedFile || isSubmitting"
       >
         {{ isSubmitting ? 'Enviando...' : 'Crear Curso' }}
       </button>
     </div>
+
 
   </form>
 </div>
