@@ -71,6 +71,7 @@ export class NavbarComponent implements OnInit {
           this.userProfile = response;
           if (!localStorage.getItem('userRole') && this.userProfile) {
             localStorage.setItem('userRole', this.userProfile.id_rol.toString());
+            console.log('Rol de usuario almacenado en localStorage:', this.userProfile.id_rol);
             this.obtenerRolUsuario();
           }
         },

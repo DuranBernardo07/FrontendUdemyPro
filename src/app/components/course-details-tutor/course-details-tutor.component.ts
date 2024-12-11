@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { CursoService } from 'src/app/services/course.service';
+import { LeccionService } from '../../services/leccion.service';
+import { PaginadoDto } from '../../models/PaginadoDto';
+import { LeccionDto } from '../../models/LeccionDto';
+
 interface Course {
   id: number;
   name: string;
@@ -10,7 +15,6 @@ interface Course {
   image: string;
 }
 
-
 @Component({
   selector: 'app-course-details-tutor',
   templateUrl: './course-details-tutor.component.html',
@@ -19,11 +23,23 @@ interface Course {
 export class CourseDetailsTutorComponent implements OnInit {
   course: any;
   isEnrolled: boolean = false;
+  lecciones: LeccionDto[] = [];
+  paginadoDto: PaginadoDto = {
+    page: 0,
+    size: 10,
+    sortBy: 'idLeccion',
+    sortDir: 'asc'
+  };
 
-  constructor(private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private snackBar: MatSnackBar,
+    private cursoService: CursoService,
+    private leccionService: LeccionService
+  ) {}
 
   ngOnInit(): void {
-    // Obtener los parámetros de la ruta (detalles del curso se pasarán como parámetros de la URL)
     this.route.queryParams.subscribe(params => {
       this.course = {
         id: params['id'],
@@ -34,21 +50,47 @@ export class CourseDetailsTutorComponent implements OnInit {
         image: params['image']
       };
     });
+
+    if (this.course) {
+      this.loadCourseDetails(this.course.id);
+      this.loadLeccionesByCursoId(this.course.id, this.paginadoDto);
+    }
   }
 
-  // Función para simular la inscripción en el curso
-  enrollInCourse() {
+  loadCourseDetails(courseId: number): void {
+    this.cursoService.getCursoById(courseId).subscribe({
+      next: (data) => {
+        this.course = data;
+        console.log('Detalles del curso cargados:', this.course);
+      },
+      error: (error) => {
+        console.error('Error al cargar los detalles del curso:', error);
+      }
+    });
+  }
+
+  loadLeccionesByCursoId(cursoId: number, paginadoDto: PaginadoDto): void {
+    this.leccionService.getLeccionesByCurso(cursoId, paginadoDto).subscribe({
+      next: (data) => {
+        console.log('Data:', data);
+        this.lecciones = data.content;
+        console.log('Lecciones del curso cargadas:', this.lecciones);
+      },
+      error: (error) => {
+        console.error('Error al cargar las lecciones del curso:', error);
+      }
+    });
+  }
+
+  enrollInCourse(): void {
     this.isEnrolled = true;
   }
 
-  // Función para volver a la lista de cursos
-  goBack() {
-    this.router.navigate(['/my-courses']); // Navegar de vuelta a la lista de cursos
+  goBack(): void {
+    this.router.navigate(['/my-courses']);
   }
 
-
-  // Función para redirigir a la vista de edición con los datos del curso
-  editCourse() {
+  editCourse(): void {
     if (this.course) {
       this.router.navigate(['/course-edit-tutor'], {
         queryParams: {
@@ -63,22 +105,54 @@ export class CourseDetailsTutorComponent implements OnInit {
     }
   }
 
-  deleteCourse() {
+  deleteCourse(id: number): void {
     if (confirm(`¿Estás seguro de que deseas eliminar el curso: ${this.course?.name}?`)) {
-      // Simular eliminación de curso
-      console.log(`Curso con ID ${this.course?.id} eliminado`);
-
-      // Mostrar notificación de éxito
-      this.snackBar.open('Curso eliminado exitosamente', 'Cerrar', {
-        duration: 3000, // Duración del mensaje en milisegundos
-        horizontalPosition: 'center',
-        verticalPosition: 'top',
-        panelClass: ['success-snackbar']
+      this.cursoService.deleteCurso(id).subscribe({
+        next: () => {
+          console.log(`Curso con ID ${id} eliminado`);
+          this.snackBar.open('Curso eliminado exitosamente', 'Cerrar', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+            panelClass: ['success-snackbar']
+          });
+          this.router.navigate(['/my-courses']);
+        },
+        error: (error) => {
+          console.error('Error al eliminar el curso:', error);
+        }
       });
-
-      // Redirigir a la lista de cursos
-      this.router.navigate(['/my-courses']);
     }
   }
 
+  viewSubject(id: number): void {
+    this.router.navigate(['/course-lections/', id]);
+  }
+
+  addLesson(): void {
+    const courseId = this.route.snapshot.paramMap.get('id');
+    this.router.navigate(['/create-lection/', courseId]);
+  }
+
+  editLesson(id: number): void {
+    console.log('ID de la lección:', id);
+    this.router.navigate(['/update-lection/', id]);
+  }
+
+  deleteLesson(id: number): void {
+    this.leccionService.deleteLeccion(id).subscribe({
+      next: () => {
+        this.snackBar.open('Lección eliminada con éxito', 'Cerrar', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: ['success-snackbar']
+        });
+        this.ngOnInit();
+      },
+      error: (error) => {
+        console.error('Error al eliminar la lección:', error);
+      }
+    });
+  }
 }

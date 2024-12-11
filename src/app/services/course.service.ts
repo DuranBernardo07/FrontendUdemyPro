@@ -34,8 +34,8 @@ export class CursoService {
   }
 
   // Actualizar un curso por ID
-  updateCurso(idCurso: number, curso: ActualizarCursoDto): Observable<ActualizarCursoDto> {
-    return this.http.put<ActualizarCursoDto>(`${this.apiUrl}/${idCurso}`, curso);
+  updateCurso(idCurso: any, curso: any): Observable<ActualizarCursoDto> {
+    return this.http.put<ActualizarCursoDto>(`http://localhost:8080/api/curso/update/${idCurso}`, curso);
   }
 
   // Borrar lógicamente un curso

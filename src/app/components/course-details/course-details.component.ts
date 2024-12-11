@@ -5,8 +5,8 @@ import { CursoDto } from '../../models/CursoDto';
 import { LeccionDto } from '../../models/LeccionDto';
 import { InscripcionService } from '../../services/inscripcion.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import {LeccionService} from '../../services/leccion.service';
-import {PaginadoDto} from "../../models/PaginadoDto";
+import { LeccionService } from '../../services/leccion.service';
+import { PaginadoDto } from '../../models/PaginadoDto';
 
 @Component({
   selector: 'app-course-details',
@@ -17,9 +17,7 @@ export class CourseDetailsComponent implements OnInit {
   course: CursoDto | null = null;
   isEnrolled: boolean = false;
   userId: number | null = null;
-  // lista de leccion dto
   lecciones: LeccionDto[] = [];
-  // paginado dto
   paginadoDto: PaginadoDto = {
     page: 0,
     size: 10,
@@ -37,7 +35,6 @@ export class CourseDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-
     const storedUserId = localStorage.getItem('idUsuario');
     if (storedUserId) {
       this.userId = Number(storedUserId);
@@ -54,16 +51,14 @@ export class CourseDetailsComponent implements OnInit {
       return;
     }
 
-    // Obtener el ID del curso de la URL
     const courseId = Number(this.route.snapshot.paramMap.get('id'));
+    console.log('ID del curso:', courseId);
     if (courseId) {
-      // Cargar los detalles del curso usando el servicio
       this.loadCourseDetails(courseId);
       this.loadLeccionesByCursoId(courseId, this.paginadoDto);
     }
   }
 
-  // Método para cargar los detalles del curso desde la API
   loadCourseDetails(courseId: number): void {
     this.cursoService.getCursoById(courseId).subscribe({
       next: (data) => {
@@ -77,7 +72,6 @@ export class CourseDetailsComponent implements OnInit {
   }
 
   loadLeccionesByCursoId(cursoId: number, paginadoDto: PaginadoDto): void {
-
     this.leccionService.getLeccionesByCurso(cursoId, paginadoDto).subscribe({
       next: (data) => {
         console.log('Data:', data);
@@ -88,10 +82,8 @@ export class CourseDetailsComponent implements OnInit {
         console.error('Error al cargar las lecciones del curso:', error);
       }
     });
-
   }
 
-  // Lógica para inscribirse en el curso
   enrollInCourse(): void {
     if (this.course && this.userId !== null) {
       const inscripcionDto = {
@@ -100,7 +92,7 @@ export class CourseDetailsComponent implements OnInit {
       };
 
       this.inscripcionService.createInscripcion(inscripcionDto).subscribe({
-        next: (data) => {
+        next: () => {
           this.isEnrolled = true;
           this.snackBar.open('¡Te has inscrito en el curso exitosamente!', 'Cerrar', {
             duration: 3000,
@@ -111,7 +103,7 @@ export class CourseDetailsComponent implements OnInit {
         },
         error: (error) => {
           console.error('Error al inscribirse en el curso:', error);
-          this.snackBar.open('Hubo un problema al intentar inscribirse en el curso.', 'Cerrar', {
+          this.snackBar.open('Ya se encuentra inscrito en este curso.', 'Cerrar', {
             duration: 3000,
             horizontalPosition: 'center',
             verticalPosition: 'top',
@@ -138,7 +130,6 @@ export class CourseDetailsComponent implements OnInit {
     this.router.navigate(['/create-lection/', courseId]);
   }
 
-  // Lógica para volver a la lista de cursos
   goBack(): void {
     this.router.navigate(['/course-categories']);
   }
@@ -149,13 +140,25 @@ export class CourseDetailsComponent implements OnInit {
   }
 
   deleteLesson(id: number): void {
-    this.leccionService.deleteLeccion(id).subscribe();
-    this.snackBar.open('Lección eliminada con éxito', 'Cerrar', {
-      duration: 3000,
-      horizontalPosition: 'center',
-      verticalPosition: 'top',
-      panelClass: ['success-snackbar'],
+    this.leccionService.deleteLeccion(id).subscribe({
+      next: () => {
+        this.snackBar.open('Lección eliminada con éxito', 'Cerrar', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: ['success-snackbar'],
+        });
+        this.ngOnInit();
+      },
+      error: (error) => {
+        console.error('Error al eliminar la lección:', error);
+        this.snackBar.open('Error al eliminar la lección.', 'Cerrar', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: ['error-snackbar'],
+        });
+      }
     });
-    this.ngOnInit();
   }
 }

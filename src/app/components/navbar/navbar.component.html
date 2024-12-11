@@ -94,7 +94,7 @@
   </ul>
 
   <!-- Pestañas para Administradores -->
-  <ul class="sidebar-list" *ngIf="userRole === 'Administrador'">
+  <ul class="sidebar-list" *ngIf="this.userRole === 'Administrador'">
     <li class="sidebar-item" [class.active]="currentRoute === '/user-management'" (click)="navigateTo('user-management')">
       <div class="sidebar-icon-container">
         <fa-icon [icon]="faUsers" class="sidebar-icon"></fa-icon>
@@ -122,7 +122,7 @@
   </ul>
 
   <!-- Pestañas para Tutores -->
-  <ul class="sidebar-list" *ngIf="userRole === 'Tutor'">
+  <ul class="sidebar-list" *ngIf="this.userRole === 'Tutor'">
     <li class="sidebar-item" [class.active]="currentRoute === '/my-courses'" (click)="navigateTo('my-courses')">
       <div class="sidebar-icon-container">
         <fa-icon [icon]="faChalkboardTeacher" class="sidebar-icon"></fa-icon>

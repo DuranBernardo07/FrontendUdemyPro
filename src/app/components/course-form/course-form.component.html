@@ -23,11 +23,9 @@
           <input id="nombre" type="text" formControlName="nombre" placeholder="Título del curso">
         </div>
         <!-- Mensaje de error para el campo de título -->
-        <!-- Mensaje de error para el campo de título -->
         <span *ngIf="courseForm.get('nombre')?.hasError('invalidTitle')" class="error-message">
-         El título solo puede contener letras, números, espacios, puntos, comas y guiones.
+          El título solo puede contener letras, números, espacios, puntos, comas y guiones.
         </span>
-
         <span *ngIf="courseForm.get('nombre')?.touched && courseForm.get('nombre')?.invalid" class="error-message">
           {{ getErrorMessage('nombre') }}
         </span>
@@ -51,12 +49,13 @@
         <div class="input-wrapper">
           <input id="portada" type="file" (change)="onFileSelected($event)" accept=".jpg, .jpeg, .png" />
         </div>
+        <span *ngIf="fileError" class="error-message">
+          {{ fileError }}
+        </span>
         <span *ngIf="!selectedFile" class="error-message">
-        Por favor, selecciona una imagen de portada.
+          Por favor, selecciona una imagen de portada.
         </span>
       </div>
-
-
 
       <!-- Mostrar la imagen de vista previa si existe -->
       <div *ngIf="previewUrl" class="image-preview">
@@ -93,7 +92,6 @@
         <div class="input-wrapper">
           <select id="Categoria_id_categoria" formControlName="Categoria_id_categoria" (change)="onCategoryChange($event)">
             <option value="" disabled selected>Selecciona una categoría</option>
-            <!-- Modificado para utilizar idCategoria -->
             <option *ngFor="let categoria of categorias" [value]="categoria.idCategoria">{{ categoria.nombre }}</option>
           </select>
         </div>
@@ -104,17 +102,14 @@
       </div>
     </div>
 
-    <!-- Nuevo botón de enviar debajo del formulario -->
+    <!-- Botón de enviar debajo del formulario -->
     <div class="form-group submit-group">
       <button
         type="submit"
         class="submit-btn"
-        [disabled]="!courseForm.valid || !selectedFile || isSubmitting"
-      >
+        [disabled]="!courseForm.valid || !selectedFile || isSubmitting">
         {{ isSubmitting ? 'Enviando...' : 'Crear Curso' }}
       </button>
     </div>
-
-
   </form>
 </div>

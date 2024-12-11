@@ -126,6 +126,10 @@ export class CourseFormComponent implements OnInit {
       formData.append('portada', this.selectedFile, this.selectedFile.name);
     }
 
+    formData.forEach((value, key) => {
+      console.log(`FormData - ${key}:`, value);
+    });
+
     this.cursoService.createCurso(formData).subscribe({
       next: (response) => {
         console.log('Curso creado:', response);
